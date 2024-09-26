@@ -4,7 +4,7 @@
 
 Acknowledgements:
 
-- `thart` was inspired by [throng](https://github.com/hunterloftis/throng) and shamelessly uses a lot of code [async-cleanup](https://www.npmjs.com/package/async-cleanup) to manage process cleanup.
+- `thart` was inspired by [throng](https://github.com/hunterloftis/throng) and shamelessly uses a lot of code from [async-cleanup](https://www.npmjs.com/package/async-cleanup) to manage process cleanup.
 
 # Features
 
@@ -49,6 +49,8 @@ const thart = require('thart');
 // or
 const { thart } = require('thart');
 ```
+
+View more examples in the [examples](examples) directory.
 
 ### Basic Example
 
@@ -127,8 +129,6 @@ await thart({
   ]
 });
 ```
-
-View more examples in the [examples](examples) directory.
 
 ## API
 

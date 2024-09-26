@@ -68,9 +68,7 @@ function spawnWorker(i, workerConfig, childProcesses) {
     childProcesses.push(childProcess);
   } else if (workerConfig.type === "cluster") {
     import_node_cluster.default.fork({ WORKER_ID: i.toString(), WORKER_TYPE: "cluster" });
-  } else {
-    throw new Error(`Invalid worker type: ${workerConfig.type}`);
-  }
+  } else throw new Error(`Invalid worker type: ${workerConfig.type}`);
 }
 function waitForWorkersWithTimeout(grace, childProcesses) {
   return new Promise((resolve, reject) => {

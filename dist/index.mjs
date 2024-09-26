@@ -126,9 +126,7 @@ function spawnWorker(i, workerConfig, childProcesses) {
     childProcesses.push(childProcess);
   } else if (workerConfig.type === "cluster") {
     cluster.fork({ WORKER_ID: i.toString(), WORKER_TYPE: "cluster" });
-  } else {
-    throw new Error(`Invalid worker type: ${workerConfig.type}`);
-  }
+  } else throw new Error(`Invalid worker type: ${workerConfig.type}`);
 }
 function waitForWorkersWithTimeout(grace, childProcesses) {
   return new Promise((resolve, reject) => {
@@ -160,32 +158,6 @@ function waitForWorkersWithTimeout(grace, childProcesses) {
 }
 function getConnectedWorkers() {
   return Object.values(cluster.workers ?? {});
-}
-
-// src/worker.ts
-async function startWorker(options, manager) {
-  if (!options.worker) throw new Error("Missing worker function");
-  const workerId = process.env.WORKER_ID;
-  if (!workerId) throw new Error("Worker ID not set");
-  const idx = Number.parseInt(workerId);
-  const workerConfig = options.worker[idx];
-  if (workerConfig.startupTimeoutMs) {
-    await Promise.race([
-      new Promise(
-        (_, reject) => setTimeout(
-          () => reject(new Error("Worker function timed out")),
-          workerConfig.startupTimeoutMs
-        )
-      ),
-      workerConfig.start(idx)
-    ]);
-  } else await workerConfig.start(idx);
-  if (workerConfig.stop) {
-    manager.addListener(workerConfig.stop);
-  }
-  if (workerConfig.killAfterCompleted) {
-    await manager.killAfterCleanup();
-  }
 }
 
 // src/validators.ts
@@ -255,6 +227,32 @@ var _validateWorkerFunction = (worker) => {
     );
   }
 };
+
+// src/worker.ts
+async function startWorker(options, manager) {
+  if (!options.worker) throw new Error("Missing worker function");
+  const workerId = process.env.WORKER_ID;
+  if (!workerId) throw new Error("Worker ID not set");
+  const idx = Number.parseInt(workerId);
+  const workerConfig = options.worker[idx];
+  if (workerConfig.startupTimeoutMs) {
+    await Promise.race([
+      new Promise(
+        (_, reject) => setTimeout(
+          () => reject(new Error("Worker function timed out")),
+          workerConfig.startupTimeoutMs
+        )
+      ),
+      workerConfig.start(idx)
+    ]);
+  } else await workerConfig.start(idx);
+  if (workerConfig.stop) {
+    manager.addListener(workerConfig.stop);
+  }
+  if (workerConfig.killAfterCompleted) {
+    await manager.killAfterCleanup();
+  }
+}
 
 // src/thart.ts
 var DEFAULT_GRACE = 1e4;
