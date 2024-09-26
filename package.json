@@ -28,6 +28,11 @@
     "fault-tolerance",
     "performance-optimization"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ramipellumbi/thart/tree/main"
+  },
+  "license": "MIT",
   "private": false,
   "version": "0.1.2",
   "main": "./dist/index.js",
