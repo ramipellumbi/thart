@@ -16,8 +16,8 @@ import type {
   WorkerFunction,
   WorkerThartOptions,
 } from "./types";
-import { startWorker } from "./worker";
 import { validateOptions } from "./validators";
+import { startWorker } from "./worker";
 
 const DEFAULT_GRACE = 10000;
 const DEFAULT_WORKER_COUNT = 1;
