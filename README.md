@@ -128,6 +128,8 @@ await thart({
 });
 ```
 
+View more examples in the [examples](examples) directory.
+
 ## API
 
 ### thart(options)

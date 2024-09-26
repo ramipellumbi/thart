@@ -1,0 +1,13 @@
+{
+  "name": "thart",
+  "version": "1.0.0",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mupdf": "^0.3.0",
+    "thart": "^0.1.0"
+  },
+  "type": "module"
+}
