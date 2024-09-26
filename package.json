@@ -29,7 +29,7 @@
     "performance-optimization"
   ],
   "private": false,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
