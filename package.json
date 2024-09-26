@@ -3,7 +3,7 @@
   "author": "Rami Pellumbi",
   "description": "A brief description of your project",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
