@@ -1,0 +1,12 @@
+{
+  "name": "thart",
+  "version": "1.0.0",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "thart": "^0.1.0"
+  },
+  "type": "module"
+}
