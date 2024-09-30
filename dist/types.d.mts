@@ -83,5 +83,9 @@ interface NormalizedThartOptions {
     worker: WorkerFunction[];
     grace: number;
 }
+declare const WORKER_TYPES: {
+    readonly child: "childProcess";
+    readonly cluster: "cluster";
+};
 
-export type { NormalizedThartOptions, PrimaryAndArrayWorkerOptions, PrimaryAndSingleWorkerOptions, PrimaryFunction, PrimaryThartOptions, ThartOptions, WorkerArrayThartOptions, WorkerCount, WorkerFunction, WorkerThartOptions };
+export { type NormalizedThartOptions, type PrimaryAndArrayWorkerOptions, type PrimaryAndSingleWorkerOptions, type PrimaryFunction, type PrimaryThartOptions, type ThartOptions, WORKER_TYPES, type WorkerArrayThartOptions, type WorkerCount, type WorkerFunction, type WorkerThartOptions };

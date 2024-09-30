@@ -4,17 +4,17 @@
 import cluster from "node:cluster";
 import { ShutdownManager } from "./async-shutdown";
 import { startPrimary } from "./primary";
-import type {
-  NormalizedThartOptions,
-  PrimaryAndArrayWorkerOptions,
-  PrimaryAndSingleWorkerOptions,
-  PrimaryFunction,
-  PrimaryThartOptions,
-  ThartOptions,
-  WorkerArrayThartOptions,
-  WorkerCount,
-  WorkerFunction,
-  WorkerThartOptions,
+import {
+  WORKER_TYPES,
+  type NormalizedThartOptions,
+  type PrimaryAndArrayWorkerOptions,
+  type PrimaryAndSingleWorkerOptions,
+  type PrimaryThartOptions,
+  type ThartOptions,
+  type WorkerArrayThartOptions,
+  type WorkerCount,
+  type WorkerFunction,
+  type WorkerThartOptions,
 } from "./types";
 import { validateOptions } from "./validators";
 import { startWorker } from "./worker";
@@ -123,9 +123,10 @@ export async function thart(opts: ThartOptions): Promise<void> {
   validateOptions(opts);
   const normalizedOptions = normalizeOptions(opts);
   const manager = new ShutdownManager();
+  console.log(normalizedOptions);
 
   // this ordering is intentional -- a spawned child process will think it is the primary
-  if (process.env.WORKER_TYPE === "childProcess") {
+  if (process.env.WORKER_TYPE === WORKER_TYPES.child) {
     await startWorker(normalizedOptions, manager);
   } else if (cluster.isPrimary) {
     await startPrimary(normalizedOptions, manager);

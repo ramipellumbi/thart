@@ -105,7 +105,8 @@ await thart({
 
 ### Multiple Worker Types
 
-A powerful feature of `thart` is the ability to spawn multiple types of workers in the same application.
+A powerful feature of `thart` is the ability to spawn multiple types of workers in the same application. This lets you seperate out,
+e.g., cron job processes from a cluster handling HTTP requests.
 
 ```javascript
 import thart from 'thart';
@@ -129,6 +130,17 @@ await thart({
   ]
 });
 ```
+
+# Notes on Process Groups
+
+When using `thart` to start up your node application, ensure you execute
+
+```bash
+node entrypoint.js
+```
+
+directly instead of using package managers like `pnpm` to start your application.
+Package managers like pnpm seem to change the way signals are propagated, interfering with the libraries ability to shut down gracefully.
 
 # API
 

@@ -100,6 +100,11 @@ interface NormalizedThartOptions {
   grace: number;
 }
 
+export const WORKER_TYPES = {
+  child: "childProcess",
+  cluster: "cluster",
+} as const;
+
 export type {
   ThartOptions,
   NormalizedThartOptions,

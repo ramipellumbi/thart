@@ -1,7 +1,11 @@
 import { type ChildProcess, fork } from "node:child_process";
 import cluster, { type Worker } from "node:cluster";
 import type { ShutdownManager } from "./async-shutdown";
-import type { NormalizedThartOptions, WorkerFunction } from "./types";
+import {
+  WORKER_TYPES,
+  type NormalizedThartOptions,
+  type WorkerFunction,
+} from "./types";
 
 export async function startPrimary(
   options: NormalizedThartOptions,
@@ -30,18 +34,20 @@ export function spawnWorker(
   workerConfig: WorkerFunction,
   childProcesses: ChildProcess[],
 ): void {
-  if (workerConfig.type === "childProcess") {
+  if (workerConfig.type === WORKER_TYPES.child) {
     const childProcess = fork(process.argv[1], [], {
       env: {
         ...process.env,
         WORKER_ID: i.toString(),
-        CHILD_PROCESS_ID: childProcesses.length.toString(),
-        WORKER_TYPE: "childProcess",
+        WORKER_TYPE: WORKER_TYPES.child,
       },
     });
     childProcesses.push(childProcess);
-  } else if (workerConfig.type === "cluster") {
-    cluster.fork({ WORKER_ID: i.toString(), WORKER_TYPE: "cluster" });
+  } else if (workerConfig.type === WORKER_TYPES.cluster) {
+    cluster.fork({
+      WORKER_ID: i.toString(),
+      WORKER_TYPE: WORKER_TYPES.cluster,
+    });
   } else throw new Error(`Invalid worker type: ${workerConfig.type}`);
 }
 
@@ -70,14 +76,12 @@ export function waitForWorkersWithTimeout(
       // really this triggers when the cluster workers array is empty but we keep the isDead
       // check for the case where cluster.workers returns a dictionary containing dead workers
       // (though I have never observed this to be the case)
-      const allWorkersDead = workers.every(
-        (worker) => !!worker && worker.isDead(),
-      );
+      const allWorkersDead = workers.every((w) => !!w && w.isDead());
       const allChildProcessesDead = childProcesses.every(
         // need the `exitCode` check to ensure we count processes that exited due to:
         // 1) empty event loop
         // 2) process.exit invocations
-        (cp) => cp.signalCode !== null || cp.exitCode !== null,
+        (child) => child.signalCode !== null || child.exitCode !== null,
       );
 
       if (allWorkersDead && allChildProcessesDead) {

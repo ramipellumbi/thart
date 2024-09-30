@@ -37,6 +37,14 @@ __export(primary_exports, {
 module.exports = __toCommonJS(primary_exports);
 var import_node_child_process = require("child_process");
 var import_node_cluster = __toESM(require("cluster"));
+
+// src/types.ts
+var WORKER_TYPES = {
+  child: "childProcess",
+  cluster: "cluster"
+};
+
+// src/primary.ts
 async function startPrimary(options, manager) {
   if (!import_node_cluster.default.isPrimary) {
     throw new Error("Can not invoke `startPrimary` outside of `primary`");
@@ -56,18 +64,20 @@ async function startPrimary(options, manager) {
   }
 }
 function spawnWorker(i, workerConfig, childProcesses) {
-  if (workerConfig.type === "childProcess") {
+  if (workerConfig.type === WORKER_TYPES.child) {
     const childProcess = (0, import_node_child_process.fork)(process.argv[1], [], {
       env: {
         ...process.env,
         WORKER_ID: i.toString(),
-        CHILD_PROCESS_ID: childProcesses.length.toString(),
-        WORKER_TYPE: "childProcess"
+        WORKER_TYPE: WORKER_TYPES.child
       }
     });
     childProcesses.push(childProcess);
-  } else if (workerConfig.type === "cluster") {
-    import_node_cluster.default.fork({ WORKER_ID: i.toString(), WORKER_TYPE: "cluster" });
+  } else if (workerConfig.type === WORKER_TYPES.cluster) {
+    import_node_cluster.default.fork({
+      WORKER_ID: i.toString(),
+      WORKER_TYPE: WORKER_TYPES.cluster
+    });
   } else throw new Error(`Invalid worker type: ${workerConfig.type}`);
 }
 function waitForWorkersWithTimeout(grace, childProcesses) {
@@ -75,14 +85,12 @@ function waitForWorkersWithTimeout(grace, childProcesses) {
     const startTime = Date.now();
     const intervalId = setInterval(() => {
       const workers = getConnectedWorkers();
-      const allWorkersDead = workers.every(
-        (worker) => !!worker && worker.isDead()
-      );
+      const allWorkersDead = workers.every((w) => !!w && w.isDead());
       const allChildProcessesDead = childProcesses.every(
         // need the `exitCode` check to ensure we count processes that exited due to:
         // 1) empty event loop
         // 2) process.exit invocations
-        (cp) => cp.signalCode !== null || cp.exitCode !== null
+        (child) => child.signalCode !== null || child.exitCode !== null
       );
       if (allWorkersDead && allChildProcessesDead) {
         clearInterval(intervalId);
