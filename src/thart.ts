@@ -123,7 +123,6 @@ export async function thart(opts: ThartOptions): Promise<void> {
   validateOptions(opts);
   const normalizedOptions = normalizeOptions(opts);
   const manager = new ShutdownManager();
-  console.log(normalizedOptions);
 
   // this ordering is intentional -- a spawned child process will think it is the primary
   if (process.env.WORKER_TYPE === WORKER_TYPES.child) {
