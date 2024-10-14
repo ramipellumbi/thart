@@ -83,17 +83,17 @@ export class ShutdownManager {
   private installExitListeners(): void {
     process.on("beforeExit", this.beforeExitListener);
     process.on("uncaughtException", this.uncaughtExceptionListener);
-    ShutdownManager.SIGNALS.forEach((signal) => {
+    for (const signal of ShutdownManager.SIGNALS) {
       process.on(signal, this.signalListener);
-    });
+    }
   }
 
   private uninstallExitListeners(): void {
     process.removeListener("beforeExit", this.beforeExitListener);
     process.removeListener("uncaughtException", this.uncaughtExceptionListener);
-    ShutdownManager.SIGNALS.forEach((signal) => {
-      process.removeListener(signal, this.signalListener);
-    });
+    for (const signal of ShutdownManager.SIGNALS) {
+      process.removeAllListeners(signal);
+    }
   }
 }
 

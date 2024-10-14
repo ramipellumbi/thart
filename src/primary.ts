@@ -1,16 +1,9 @@
 import { type ChildProcess, fork } from "node:child_process";
 import cluster, { type Worker } from "node:cluster";
 import type { ShutdownManager } from "./async-shutdown";
-import {
-  WORKER_TYPES,
-  type NormalizedThartOptions,
-  type WorkerFunction,
-} from "./types";
+import { type NormalizedThartOptions, WORKER_TYPES, type WorkerFunction } from "./types";
 
-export async function startPrimary(
-  options: NormalizedThartOptions,
-  manager: ShutdownManager,
-): Promise<void> {
+export async function startPrimary(options: NormalizedThartOptions, manager: ShutdownManager): Promise<void> {
   if (!cluster.isPrimary) {
     throw new Error("Can not invoke `startPrimary` outside of `primary`");
   }
@@ -29,11 +22,7 @@ export async function startPrimary(
   }
 }
 
-export function spawnWorker(
-  i: number,
-  workerConfig: WorkerFunction,
-  childProcesses: ChildProcess[],
-): void {
+export function spawnWorker(i: number, workerConfig: WorkerFunction, childProcesses: ChildProcess[]): void {
   if (workerConfig.type === WORKER_TYPES.child) {
     const childProcess = fork(process.argv[1], [], {
       env: {
@@ -65,10 +54,7 @@ export function spawnWorker(
  *                          or rejects if the grace period expires.
  * @throws {Error} If the grace period expires before all workers and child processes terminate.
  */
-export function waitForWorkersWithTimeout(
-  grace: number,
-  childProcesses: ChildProcess[],
-): Promise<void> {
+export function waitForWorkersWithTimeout(grace: number, childProcesses: ChildProcess[]): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const startTime = Date.now();
     const intervalId = setInterval(() => {
@@ -92,8 +78,12 @@ export function waitForWorkersWithTimeout(
       if (Date.now() - startTime >= grace) {
         console.error("Forcibly terminating workers after grace period");
         clearInterval(intervalId);
-        workers.forEach((worker) => worker?.kill());
-        childProcesses.forEach((cp) => cp.kill());
+        for (const worker of workers) {
+          if (worker) worker.kill();
+        }
+        for (const cp of childProcesses) {
+          cp.kill();
+        }
         reject(new Error("Forcibly terminated workers after grace period"));
       }
     }, 100);

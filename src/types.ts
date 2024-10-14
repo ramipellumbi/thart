@@ -84,8 +84,7 @@ type WorkerArrayThartOptions = CommonThartOptions & {
 
 type PrimaryAndSingleWorkerOptions = PrimaryThartOptions & WorkerThartOptions;
 
-type PrimaryAndArrayWorkerOptions = PrimaryThartOptions &
-  WorkerArrayThartOptions;
+type PrimaryAndArrayWorkerOptions = PrimaryThartOptions & WorkerArrayThartOptions;
 
 type ThartOptions =
   | PrimaryThartOptions
