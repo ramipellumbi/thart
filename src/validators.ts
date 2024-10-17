@@ -1,9 +1,4 @@
-import type {
-  PrimaryFunction,
-  ThartOptions,
-  WorkerCount,
-  WorkerFunction,
-} from "./types";
+import type { PrimaryFunction, ThartOptions, WorkerCount, WorkerFunction } from "./types";
 
 export const validateOptions = (opts: ThartOptions) => {
   if (typeof opts !== "object" || opts === null) {
@@ -24,7 +19,9 @@ export const validateOptions = (opts: ThartOptions) => {
   if ("primary" in opts) _validatePrimaryFunction(opts.primary);
   if ("worker" in opts) {
     if (Array.isArray(opts.worker)) {
-      opts.worker.forEach(_validateWorkerFunction);
+      for (const worker of opts.worker) {
+        _validateWorkerFunction(worker);
+      }
     } else {
       _validateWorkerFunction(opts.worker);
     }
@@ -45,9 +42,7 @@ const _validatePrimaryFunction = (primary: PrimaryFunction) => {
   }
 };
 
-const _validateWorkerFunction = (
-  worker: WorkerFunction & Partial<WorkerCount>,
-) => {
+const _validateWorkerFunction = (worker: WorkerFunction & Partial<WorkerCount>) => {
   if (typeof worker !== "object" || worker === null) {
     throw new TypeError("Worker configuration must be an object");
   }
@@ -57,9 +52,7 @@ const _validateWorkerFunction = (
   }
 
   if (!["childProcess", "cluster"].includes(worker.type)) {
-    throw new TypeError(
-      'Worker type must be either "childProcess" or "cluster"',
-    );
+    throw new TypeError('Worker type must be either "childProcess" or "cluster"');
   }
 
   if ("stop" in worker && typeof worker.stop !== "function") {
@@ -67,13 +60,8 @@ const _validateWorkerFunction = (
   }
 
   if ("startupTimeoutMs" in worker) {
-    if (
-      typeof worker.startupTimeoutMs !== "number" ||
-      worker.startupTimeoutMs < 0
-    ) {
-      throw new TypeError(
-        "Worker startupTimeoutMs, if provided, must be a non-negative number",
-      );
+    if (typeof worker.startupTimeoutMs !== "number" || worker.startupTimeoutMs < 0) {
+      throw new TypeError("Worker startupTimeoutMs, if provided, must be a non-negative number");
     }
   }
 
@@ -84,12 +72,7 @@ const _validateWorkerFunction = (
     }
   }
 
-  if (
-    "killAfterCompleted" in worker &&
-    typeof worker.killAfterCompleted !== "boolean"
-  ) {
-    throw new TypeError(
-      "Worker killAfterCompleted, if provided, must be a boolean",
-    );
+  if ("killAfterCompleted" in worker && typeof worker.killAfterCompleted !== "boolean") {
+    throw new TypeError("Worker killAfterCompleted, if provided, must be a boolean");
   }
 };

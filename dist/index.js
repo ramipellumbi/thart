@@ -307,7 +307,6 @@ async function thart(opts) {
   validateOptions(opts);
   const normalizedOptions = normalizeOptions(opts);
   const manager = new ShutdownManager();
-  console.log(normalizedOptions);
   if (process.env.WORKER_TYPE === WORKER_TYPES.child) {
     await startWorker(normalizedOptions, manager);
   } else if (import_node_cluster2.default.isPrimary) {
