@@ -46,7 +46,7 @@
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs",
-      "ty7pes": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
