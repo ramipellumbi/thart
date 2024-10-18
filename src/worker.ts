@@ -25,8 +25,6 @@
 import type { ShutdownManager } from "./async-shutdown";
 import type { NormalizedThartOptions } from "./types";
 
-const STARTUP_TIMEOUT_MS = 5000;
-
 export async function startWorker(options: NormalizedThartOptions, manager: ShutdownManager): Promise<void> {
   if (!options.worker) throw new Error("Missing worker function");
   const workerId = process.env.WORKER_ID;
@@ -38,7 +36,7 @@ export async function startWorker(options: NormalizedThartOptions, manager: Shut
   if (workerConfig.startupTimeoutMs) {
     await Promise.race([
       new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Worker function timed out")), workerConfig.startupTimeoutMs ?? STARTUP_TIMEOUT_MS),
+        setTimeout(() => reject(new Error("Worker function timed out")), workerConfig.startupTimeoutMs),
       ),
       workerConfig.start(idx),
     ]);
