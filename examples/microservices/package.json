@@ -6,7 +6,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "thart": "^0.1.0"
+    "thart": "^0.1.9"
   },
   "type": "module"
 }
