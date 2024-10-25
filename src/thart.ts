@@ -31,16 +31,16 @@ import cluster from "node:cluster";
 import { ShutdownManager } from "./async-shutdown";
 import { startPrimary } from "./primary";
 import {
-  type NormalizedThartOptions,
-  type PrimaryAndArrayWorkerOptions,
-  type PrimaryAndSingleWorkerOptions,
-  type PrimaryThartOptions,
-  type ThartOptions,
-  WORKER_TYPES,
-  type WorkerArrayThartOptions,
-  type WorkerCount,
-  type WorkerFunction,
-  type WorkerThartOptions,
+    type NormalizedThartOptions,
+    type PrimaryAndArrayWorkerOptions,
+    type PrimaryAndSingleWorkerOptions,
+    type PrimaryThartOptions,
+    type ThartOptions,
+    WORKER_TYPES,
+    type WorkerArrayThartOptions,
+    type WorkerCount,
+    type WorkerFunction,
+    type WorkerThartOptions,
 } from "./types";
 import { validateOptions } from "./validators";
 import { startWorker } from "./worker";
@@ -146,48 +146,50 @@ export async function thart(opts: PrimaryAndSingleWorkerOptions): Promise<void>;
  */
 export async function thart(opts: PrimaryAndArrayWorkerOptions): Promise<void>;
 export async function thart(opts: ThartOptions): Promise<void> {
-  validateOptions(opts);
-  const normalizedOptions = normalizeOptions(opts);
-  const manager = new ShutdownManager();
+    validateOptions(opts);
+    const normalizedOptions = normalizeOptions(opts);
+    const manager = new ShutdownManager();
 
-  // this ordering is intentional -- a spawned child process will think it is the primary
-  if (process.env.WORKER_TYPE === WORKER_TYPES.child) {
-    await startWorker(normalizedOptions, manager);
-  } else if (cluster.isPrimary) {
-    await startPrimary(normalizedOptions, manager);
-  } else if (cluster.worker) {
-    await startWorker(normalizedOptions, manager);
-  }
+    // this ordering is intentional -- a spawned child process will think it is the primary
+    if (process.env.WORKER_TYPE === WORKER_TYPES.child) {
+        await startWorker(normalizedOptions, manager);
+    } else if (cluster.isPrimary) {
+        await startPrimary(normalizedOptions, manager);
+    } else if (cluster.worker) {
+        await startWorker(normalizedOptions, manager);
+    }
 }
 
 function normalizeOptions(options: ThartOptions): NormalizedThartOptions {
-  const primary = "primary" in options ? options.primary : undefined;
-  const worker = normalizeWorkerOptions(options);
-  const grace = options.grace ?? DEFAULT_GRACE;
-  return { primary, worker, grace };
+    const primary = "primary" in options ? options.primary : undefined;
+    const worker = normalizeWorkerOptions(options);
+    const grace = options.grace ?? DEFAULT_GRACE;
+    return { primary, worker, grace };
 }
 
 function normalizeWorkerOptions(options: ThartOptions): WorkerFunction[] {
-  if (!("worker" in options)) return [];
-  const workers: WorkerFunction[] = [];
-  if (Array.isArray(options.worker)) {
-    for (const worker of options.worker) {
-      for (let i = 0; i < (worker.count ?? DEFAULT_WORKER_COUNT); i++) {
-        workers.push(_getWorker(worker));
-      }
+    if (!("worker" in options)) {
+        return [];
     }
-  } else {
-    for (let i = 0; i < options.worker.count; i++) {
-      workers.push(_getWorker(options.worker));
+    const workers: WorkerFunction[] = [];
+    if (Array.isArray(options.worker)) {
+        for (const worker of options.worker) {
+            for (let i = 0; i < (worker.count ?? DEFAULT_WORKER_COUNT); i++) {
+                workers.push(_getWorker(worker));
+            }
+        }
+    } else {
+        for (let i = 0; i < options.worker.count; i++) {
+            workers.push(_getWorker(options.worker));
+        }
     }
-  }
-  return workers;
+    return workers;
 }
 
 const _getWorker = (worker: WorkerFunction & Partial<WorkerCount>): WorkerFunction => ({
-  start: worker.start,
-  stop: worker.stop,
-  type: worker.type,
-  killAfterCompleted: worker.killAfterCompleted,
-  startupTimeoutMs: worker.startupTimeoutMs,
+    start: worker.start,
+    stop: worker.stop,
+    type: worker.type,
+    killAfterCompleted: worker.killAfterCompleted,
+    startupTimeoutMs: worker.startupTimeoutMs,
 });
