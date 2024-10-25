@@ -53,7 +53,7 @@
     "build": "tsup ./src",
     "dev": "tsup --watch",
     "lint": "biome check --write ./src",
-    "test": "jest"
+    "format": "biome format --write ./src"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.2",

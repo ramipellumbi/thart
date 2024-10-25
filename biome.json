@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "organizeImports": {
     "enabled": true
   },
@@ -11,6 +11,10 @@
         "noUnusedTemplateLiteral": {
           "level": "warn",
           "fix": "safe"
+        },
+        "useBlockStatements": {
+          "level": "error",
+          "fix": "safe"
         }
       }
     }
@@ -20,10 +24,10 @@
     "attributePosition": "auto",
     "formatWithErrors": false,
     "indentStyle": "space",
-    "indentWidth": 2,
+    "indentWidth": 4,
     "lineWidth": 120,
     "lineEnding": "lf",
-    "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.jsonc"],
-    "ignore": ["node_modules/*", "*.config.*", "*.json", "tsconfig.json", ".turbo", "**/*.test.ts"]
+    "include": ["**/*.ts", "**/*.test.ts"],
+    "ignore": ["node_modules/*", "dist/*", "tsconfig.json"]
   }
 }
