@@ -7,4 +7,5 @@ export default defineConfig({
   sourcemap: true,
   splitting: false,
   target: "esnext",
+  entry: ["src/**/*.ts", "!src/**/*.test.ts"],
 });
