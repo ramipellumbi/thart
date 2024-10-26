@@ -1,5 +1,5 @@
 {
-  "name": "thart",
+  "name": "@ramplex/thart",
   "author": "Rami Pellumbi",
   "description": "A Node.js library for managing the lifecycle of multi-process applications",
   "keywords": [
