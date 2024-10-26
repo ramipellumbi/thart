@@ -22,9 +22,9 @@ Acknowledgements:
 Thart is on the npm registry. Install it with your choice of npm, yarn, or pnpm.
 
 ```bash
-npm install thart
-yarn add thart
-pnpm add thart
+npm install @ramplex/thart
+yarn add @ramplex/thart
+pnpm add @ramplex/thart
 ```
 
 # Usage
