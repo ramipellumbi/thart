@@ -1,6 +1,8 @@
- # thart
+# thart
 
 `thart` is a Node.js library for managing the lifecycle of multi-process applications. It provides a simple, flexible API for spawning and managing worker processes, handling graceful shutdowns, and coordinating between primary and worker processes.
+
+**IMPORTANT** `thart` and all future versions are now installable from `@ramplex/thart`. The original `thart` package has been deprecated and will no longer be maintained.
 
 Acknowledgements:
 
@@ -17,37 +19,26 @@ Acknowledgements:
 
 # Installation
 
-### npm
+Thart is on the npm registry. Install it with your choice of npm, yarn, or pnpm.
 
 ```bash
 npm install thart
-```
-
-### pnpm
-
-```bash
-pnpm add thart
-```
-
-### yarn
-
-```bash
 yarn add thart
+pnpm add thart
 ```
 
 # Usage
 
 `thart` can be imported via ES6 imports or CommonJS require as a default or named import.
 
-
 ```javascript
-import thart from 'thart';
+import thart from "@ramplex/thart";
 // or
-import { thart } from 'thart';
+import { thart } from "@ramplex/thart";
 // or
-const thart = require('thart');
+const thart = require("@ramplex/thart");
 // or
-const { thart } = require('thart');
+const { thart } = require("@ramplex/thart");
 ```
 
 View more examples in the [examples](examples) directory.
@@ -55,51 +46,51 @@ View more examples in the [examples](examples) directory.
 ### Basic Example
 
 ```javascript
-import thart from 'thart';
+import thart from "@ramplex/thart";
 
 await thart({
   worker: {
     count: 4,
     // allows TCP servers to be shared between workers
-    type: 'cluster',
+    type: "cluster",
     start: async (id) => {
       console.log(`Worker ${id} starting`);
       // Your worker logic here
     },
     stop: async () => {
-      console.log('Worker stopping');
+      console.log("Worker stopping");
       // Cleanup logic here
-    }
-  }
+    },
+  },
 });
 ```
 
 ### Primary and Worker Processes
 
 ```javascript
-import thart from 'thart';
+import thart from "@ramplex/thart";
 
 await thart({
   primary: {
     // this runs before any workers are forked
     start: async () => {
-      console.log('Primary process started');
+      console.log("Primary process started");
       // Primary process initialization
     },
     // this runs after all workers have exited
     stop: async () => {
-      console.log('Primary process stopping');
+      console.log("Primary process stopping");
       // Primary process cleanup
-    }
+    },
   },
   worker: {
     count: 2,
-    type: 'childProcess',
+    type: "childProcess",
     start: async (id) => {
       console.log(`Worker ${id} started`);
       // Worker process logic
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -109,25 +100,25 @@ A powerful feature of `thart` is the ability to spawn multiple types of workers 
 e.g., cron job processes from a cluster handling HTTP requests.
 
 ```javascript
-import thart from 'thart';
+import thart from "@ramplex/thart";
 
 await thart({
   worker: [
     {
       count: 2,
-      type: 'cluster',
+      type: "cluster",
       start: async (id) => {
         console.log(`Cluster worker ${id} started`);
-      }
+      },
     },
     {
       count: 1,
-      type: 'childProcess',
+      type: "childProcess",
       start: async (id) => {
         console.log(`Child process worker ${id} started`);
-      }
-    }
-  ]
+      },
+    },
+  ],
 });
 ```
 
